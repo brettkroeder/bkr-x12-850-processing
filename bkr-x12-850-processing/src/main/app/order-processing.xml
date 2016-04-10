@@ -69,7 +69,7 @@ using ( value = payload[0] ) {
 }
 ]]></dw:set-payload>
         </dw:transform-message>
-        <http:request config-ref="OrderEntryAPI" path="/orders" method="POST" doc:name="Call OrderEntry API"/>
+        <http:request config-ref="OrderEntryAPI" path="/orders" method="POST" doc:name="Call OrderEntry API" doc:description="This calls the common Order API"/>
         <logger level="INFO" doc:name="Logger" message="#[payload]"/>
     </flow>
     <flow name="SendAck"  processingStrategy="asynchronous">
