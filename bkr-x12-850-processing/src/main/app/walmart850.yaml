@@ -1,0 +1,7 @@
+form: X12
+transactions:
+- id: '850'
+  heading:
+  - { idRef: 'PAM', usage: U, count: 5 }
+  - { idRef: 'CSH', usage: O, count: 5 }
+  

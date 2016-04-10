@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:x12-edi="http://www.mulesoft.org/schema/mule/x12-edi" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:edi="http://www.mulesoft.org/schema/mule/edi" xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:magento="http://www.mulesoft.org/schema/mule/magento" xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:sap="http://www.mulesoft.org/schema/mule/sap" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:odata="http://www.mulesoft.org/schema/mule/odata" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/odata http://www.mulesoft.org/schema/mule/odata/current/mule-odata.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/current/mule-magento.xsd
+http://www.mulesoft.org/schema/mule/edi http://www.mulesoft.org/schema/mule/edi/current/mule-edi.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/x12-edi http://www.mulesoft.org/schema/mule/x12-edi/current/mule-x12-edi.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+
+    <context:property-placeholder location="classpath:conf.properties" />
+    
+    <x12-edi:config name="X12EDIConfig" doc:name="EDI" groupIdSelf="RECEIVER" interchangeIdQualifierSelf="ZZ" 
+    interchangeIdSelf="RECEIVER" groupIdPartner="SENDER" interchangeIdPartner="SENDER" interchangeIdQualifierPartner="ZZ" >
+        <x12-edi:schemas>
+            <x12-edi:schema>/x12/005010/850.esl</x12-edi:schema>
+            <x12-edi:schema>/x12/005010/855.esl</x12-edi:schema>
+        </x12-edi:schemas>
+    </x12-edi:config>
+    <http:request-config name="OrderEntryAPI" host="order-entry.cloudhub.io" port="80" doc:name="HTTP Request Configuration" >
+        <http:raml-api-configuration location="https://anypoint.mulesoft.com/apiplatform/repository/v2/organizations/84f3b5ea-6a21-40ed-aa01-06314c652ce7/public/apis/18484/versions/36277/files/root"/>
+    </http:request-config>
+
+    
+    <flow name="ReceiveOrdersFromPartner" >
+        <x12-edi:read config-ref="X12EDIConfig" doc:name="Read EDI Doc"/>
+        <flow-ref name="order-processingFlow" doc:name="order-processingFlow"/>
+        
+        <flow-ref name="SendAck" doc:name="Send Acks"/>
+    </flow>
+    <flow name="order-processingFlow">
+        <set-payload value="#[payload.TransactionSets['v005010']['850']]" doc:name="Extract 850s"/>
+        <dw:transform-message metadata:id="b5c16cb9-06c1-4126-a8ac-890c1198ba44" doc:name="Transform 850 to Order JSON">
+            <dw:input-payload/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+using ( value = payload[0] ) {
+	address: "718 Crescent Circle",
+	city: "Canton",
+	country: "US",
+	email: "keithroeder2@gmail.com",
+	first_name: "Brett",
+	last_name: "Roeder",
+	products: payload.Transactions."850".Detail."0100 PO1" map ((v0100PO1 , indexOfV0100PO1) -> {
+		name: v0100PO1."0100 PO1".PO108,
+		price: v0100PO1."0100 PO1".PO104 as :number,
+		quantity: v0100PO1."0100 PO1".PO102 as :number
+	}),
+	postalCode: "30115",
+	state: "GA"
+}
+]]></dw:set-payload>
+        </dw:transform-message>
+        <http:request config-ref="OrderEntryAPI" path="/orders" method="POST" doc:name="Call OrderEntry API"/>
+        <logger level="INFO" doc:name="Logger" message="#[payload]"/>
+    </flow>
+    <flow name="SendAck"  processingStrategy="asynchronous">
+        <set-payload value="#[ ['Transactions' : ['997' : payload.FunctionalAcksGenerated] ] ]" doc:name="Create EDI Message"/>
+        <x12-edi:write config-ref="X12EDIConfig" doc:name="Send 997"/>
+        <file:outbound-endpoint responseTimeout="10000" doc:name="File" path="output" outputPattern="ack.edi"/>
+    </flow>
+</mule>

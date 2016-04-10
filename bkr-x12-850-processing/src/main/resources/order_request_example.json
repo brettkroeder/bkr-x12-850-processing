@@ -1,0 +1,16 @@
+{
+  "first_name": "Keith",
+  "last_name": "Roeder",
+  "email": "keithroeder2@gmail.com",
+  "country": "US",
+  "address": "718 Crescent Circle"
+  "city", "Canton",
+  "state", "GA",
+  "postalCode", "30115",
+  "products": [
+    {
+      "name": "S21",
+      "quantity": 1
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+#%RAML 0.8
+title: Order Entry API
+version: 1.0
+baseUri: http://0.0.0.0:8081/api
+
+/orders:
+  displayName: Orders
+  post:
+    description: Submit an Order
+    body:
+      application/json:
+        schema: !include  order_request_schema.json
+        example: !include order_request_example.json
+    responses:
+      200:
+        body:
+          application/json:
+            schema:  !include order_response_schema.json
+            example: !include order_response_example.json
+  get:
+    description: Get all the sales orders
+    responses:
+      200:
+        body:
+          application/json:
+            schema: !include orders_response_schema.json
+            example: !include orders_response_example.json
+              
+  /{id}/status:
+    displayName: Get Order Status By Order Id
+    description: Gets the order status information
+    uriParameters:
+      id:
+        type: integer
+        minimum: 0
+        example: 451
+        description: Represents the sales order unique id
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              schema: !include order_status_response_schema.json
+              example: !include order_status_response_example.json
+        400:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Bad message"
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Resource not found"
+                }

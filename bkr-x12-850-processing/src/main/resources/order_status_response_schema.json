@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "status": {
+      "id": "http://jsonschema.net/status",
+      "type": "string"
+    },
+    "tracking_number": {
+      "id": "http://jsonschema.net/tracking_number",
+      "type": "string"
+    },
+    "price_currency": {
+      "id": "http://jsonschema.net/price_currency",
+      "type": "string"
+    },
+    "total_price": {
+      "id": "http://jsonschema.net/total_price",
+      "type": "number"
+    }
+  },
+  "required": [
+    "status",
+    "tracking_number",
+    "price_currency",
+    "total_price"
+  ]
+}

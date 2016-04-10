@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Product set",
+    "type": "array",
+    "items": {
+        "title": "Order",
+        "type": "object",
+        "properties": {
+            "id": {
+                "description": "The unique identifier for an order",
+                "type": "number"
+            },
+            "name": {
+                "type": "string"
+            }
+        },
+        "required": ["id", "name"]
+    }
+}
